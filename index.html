@@ -1,5 +1,33 @@
-<script src="https://copy.sh/v86/build/libv86.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Android x86 Browser Emulator</title>
+    <style>
+        body { background: #1a1a1a; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #screen_container { width: 800px; height: 600px; background: #000; border: 5px solid #333; border-radius: 8px; position: relative; }
+        .controls { margin-top: 20px; padding: 15px; background: #333; border-radius: 5px; }
+        #status { color: #00ff00; margin-top: 10px; font-family: monospace; }
+        canvas { display: block; } /* This is where the Android video goes */
+    </style>
+</head>
+<body>
 
-<script src="content_reporter.js"></script>
+    <h2>Android x86 Bootloader</h2>
 
-<script src="launcher.js"></script>
+    <div id="screen_container">
+        <div style="white-space: pre; font-family: Courier, monospace;"></div>
+        <canvas></canvas>
+    </div>
+
+    <div class="controls">
+        <label>Select Android ISO: </label>
+        <input type="file" id="iso_input">
+        <div id="status">Ready. Please select a file.</div>
+    </div>
+
+    <script src="https://copy.sh/v86/build/libv86.js"></script>
+    <script src="content_reporter.js"></script>
+    <script src="launcher.js"></script>
+
+</body>
+</html>
