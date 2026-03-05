@@ -2,26 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Android VM | Fixed</title>
+    <title>Android VM</title>
     <script src="coi-serviceworker.js"></script>
-    <script>
-        // Force a page reload if the security unlocker hasn't kicked in yet
-        if (!window.crossOriginIsolated && window.location.hostname !== "localhost") {
-            console.log("Security handshake in progress...");
-        }
-    </script>
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; text-align: center; padding-top: 50px; }
-        #screen_container { width: 800px; height: 600px; margin: auto; border: 2px solid #333; }
-        #status { background: #111; padding: 10px; display: inline-block; border-radius: 5px; margin-top: 10px; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #screen_container { width: 800px; height: 600px; border: 2px solid #333; }
+        #status { margin-top: 15px; color: #ff9800; }
     </style>
 </head>
 <body>
     <div id="screen_container"><canvas></canvas></div>
     <div style="margin-top:20px;">
-        <input type="file" id="iso_input" accept=".iso">
-        <p id="status">STATUS: INITIALIZING ENGINE...</p>
+        <input type="file" id="iso_input">
+        <p id="status">STATUS: INITIALIZING...</p>
     </div>
+
     <script src="./libv86.js"></script>
     <script src="./launcher.js"></script>
 </body>
