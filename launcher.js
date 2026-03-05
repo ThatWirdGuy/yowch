@@ -2,30 +2,29 @@ const dropZone = document.getElementById('drop-zone');
 const screenContainer = document.getElementById('screen_container');
 
 function startAndroid(apkBuffer) {
-    // Hide the drop zone and show the emulator screen
+    // Hide UI and show the "Phone Screen"
     dropZone.style.display = 'none';
     screenContainer.style.display = 'block';
 
-    // Initialize the v86 Emulator
     const emulator = new V86Starter({
         wasm_path: "https://cdnjs.cloudflare.com/ajax/libs/v86/0.12.0/v86.wasm",
         memory_size: 512 * 1024 * 1024, // 512MB RAM
         vga_assets: "https://copy.sh/v86/bios/vgabios.bin",
         bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
-        // REPLACE THIS URL with a direct link to your Android-x86 ISO
-        cdrom: { url: "https://your-direct-link-to-android.iso" }, 
+        // GET YOUR DIRECT LINK FROM SOURCEFORGE (Right-click "Problems Downloading")
+        cdrom: { url: "REPLACE_WITH_YOUR_DIRECT_ISO_LINK" }, 
         autostart: true,
         screen_container: screenContainer,
     });
 
     emulator.add_listener("emulator-ready", function() {
-        console.log("Virtual Machine Ready.");
-        // Inject the APK into the VM's memory
+        console.log("OS Booting... Injecting APK.");
+        // This places the file into the virtual system's memory
         emulator.create_file("/game.apk", new Uint8Array(apkBuffer));
     });
 }
 
-// Drag & Drop Listeners
+// File Drop Logic
 dropZone.ondragover = e => e.preventDefault();
 dropZone.ondrop = e => {
     e.preventDefault();
