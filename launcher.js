@@ -1,34 +1,32 @@
-const dropZone = document.getElementById('drop-zone');
-const screenContainer = document.getElementById('screen_container');
+// Ensure we handle the "Unexpected token export" by using a module-friendly approach
+import { someReporter } from './content_reporter.js'; 
 
-function startAndroid(apkBuffer) {
-    dropZone.style.display = 'none';
-    screenContainer.style.display = 'block';
+function startAndroid(isoBuffer) {
+    // Check if the library loaded correctly
+    if (typeof V86Starter === "undefined") {
+        console.error("V86Starter is not defined. Check if libv86.js is loaded.");
+        return;
+    }
 
     const emulator = new V86Starter({
         wasm_path: "https://copy.sh/v86/build/v86.wasm",
-        memory_size: 512 * 1024 * 1024,
-        vga_assets: "https://copy.sh/v86/bios/vgabios.bin",
+        memory_size: 512 * 1024 * 1024, // Android needs at least 512MB
+        vga_memory_size: 8 * 1024 * 1024,
+        screen_container: document.getElementById("screen_container"),
         bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
-        // IMPORTANT: SourceForge links often block automated downloads.
-        // Try using a direct archive link like this one:
-        cdrom: { url: "https://archive.org/download/android-x-86-4.4-r-5/android-x86-4.4-r5.iso" }, 
+        cdrom: { buffer: isoBuffer }, // Using the buffer from your file reader
         autostart: true,
-        screen_container: screenContainer,
-    });
-
-    emulator.add_listener("emulator-ready", function() {
-        console.log("System Ready. Uploading Game...");
-        emulator.create_file("/game.apk", new Uint8Array(apkBuffer));
     });
 }
 
-// Drag and Drop Logic
-dropZone.ondragover = e => e.preventDefault();
-dropZone.ondrop = e => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    const reader = new FileReader();
-    reader.onload = (ev) => startAndroid(ev.target.result);
-    reader.readAsArrayBuffer(file);
+// Fixed listener for your file upload
+const reader = new FileReader();
+reader.onload = function(e) {
+    const buffer = e.target.result;
+    startAndroid(buffer);
+};
+
+// Assuming you have an <input type="file" id="iso_input">
+document.getElementById('iso_input').onchange = function(e) {
+    reader.readAsArrayBuffer(this.files[0]);
 };
