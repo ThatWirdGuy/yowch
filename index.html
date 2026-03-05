@@ -2,36 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Android x86 Emulator</title>
+    <title>Android x86 | Vercel Deployment</title>
     <style>
-        body { background: #1a1a1a; color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        #screen_container { width: 800px; height: 600px; background: #000; border: 4px solid #333; border-radius: 8px; position: relative; }
-        #screen_container canvas { display: block; width: 100%; height: 100%; }
-        .controls { margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 10px; text-align: center; }
-        #status { color: #00ff00; margin-top: 10px; font-family: monospace; }
-        #loader { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
-        .spinner { border: 4px solid #444; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        body { background: #121212; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        #screen_container { width: 800px; height: 600px; background: #000; border: 2px solid #3498db; box-shadow: 0 0 20px rgba(52, 152, 219, 0.2); }
+        #loader { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:100; flex-direction:column; align-items:center; justify-content:center; }
+        .spinner { border: 4px solid #333; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .upload-area { margin-top: 20px; padding: 20px; border: 1px dashed #444; border-radius: 8px; }
     </style>
 </head>
 <body>
-
-    <div id="loader">
-        <div class="spinner"></div>
-        <p id="loader_text" style="margin-top:20px;">LOADING SYSTEM...</p>
-    </div>
-
-    <h2>Android x86 Browser VM</h2>
+    <div id="loader"><div class="spinner"></div><p id="loader_text">INITIALIZING...</p></div>
+    
     <div id="screen_container"><canvas></canvas></div>
 
-    <div class="controls">
+    <div class="upload-area">
         <input type="file" id="iso_input" accept=".iso">
-        <div id="status">Ready. Select Android ISO.</div>
+        <p id="status">Vercel Status: Ready. Please select your Android ISO.</p>
     </div>
 
-    <script src="https://unpkg.com/v86@latest/build/libv86.js" crossorigin="anonymous"></script>
+    <script src="libv86.js"></script>
     <script src="content_reporter.js"></script>
     <script src="launcher.js"></script>
-
 </body>
 </html>
