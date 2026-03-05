@@ -6,7 +6,9 @@
     
     <script>
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./coi-serviceworker.js");
+            navigator.serviceWorker.register("./coi-serviceworker.js")
+                .then(() => console.log("Security worker registered."))
+                .catch(err => console.error("Worker failed:", err));
         }
     </script>
     
@@ -15,14 +17,14 @@
     <style>
         body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
         #screen_container { width: 800px; height: 600px; border: 2px solid #333; background: #000; }
-        #status { margin-top: 15px; padding: 10px; border-radius: 4px; background: #111; }
+        #status { margin-top: 15px; padding: 10px; border-radius: 4px; background: #111; color: #ff9800; }
     </style>
 </head>
 <body>
     <div id="screen_container"><canvas></canvas></div>
     <div style="margin-top:20px;">
-        <input type="file" id="iso_input">
-        <p id="status">STATUS: CHECKING SECURITY...</p>
+        <input type="file" id="iso_input" accept=".iso">
+        <p id="status">STATUS: CHECKING BROWSER SECURITY...</p>
     </div>
     <script src="./launcher.js"></script>
 </body>
