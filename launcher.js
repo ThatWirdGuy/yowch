@@ -5,28 +5,25 @@ function updateStatus(msg, color = "#0f0") {
     statusEl.style.color = color;
 }
 
-// LIVE WATCHER: Keep checking until V86Starter exists
-const checkEngine = setInterval(() => {
+// The "Watcher" loop: Checks every 500ms for the engine
+function waitForV86() {
     if (typeof V86Starter !== "undefined") {
-        clearInterval(checkEngine);
         if (window.crossOriginIsolated) {
-            updateStatus("READY. SELECT ANDROID ISO.", "#0f0");
+            updateStatus("Ready. Select Android ISO.", "#0f0");
         } else {
-            updateStatus("SECURITY ACTIVE. PLEASE REFRESH ONCE.", "#ff9800");
+            updateStatus("Security Locked. Please refresh the page.", "#ff9800");
         }
     } else {
-        updateStatus("SEARCHING FOR V86 ENGINE...", "#ff9800");
+        updateStatus("Loading libv86.js into memory...", "#ff9800");
+        setTimeout(waitForV86, 500);
     }
-}, 500);
+}
+
+waitForV86();
 
 document.getElementById('iso_input').onchange = function(e) {
     const file = e.target.files[0];
-    if (!file) return;
-
-    if (typeof V86Starter === "undefined") {
-        alert("Wait! The engine hasn't loaded yet. Check your internet connection.");
-        return;
-    }
+    if (!file || typeof V86Starter === "undefined") return;
 
     updateStatus("Reading ISO: " + file.name);
     const reader = new FileReader();
@@ -41,10 +38,9 @@ document.getElementById('iso_input').onchange = function(e) {
                 cdrom: { buffer: event.target.result },
                 autostart: true,
             });
-
-            emulator.add_listener("emulator-started", () => updateStatus("ANDROID BOOTING..."));
+            emulator.add_listener("emulator-started", () => updateStatus("Running"));
         } catch (err) {
-            updateStatus("BOOT ERROR: " + err.message, "#f00");
+            updateStatus("Error: " + err.message, "#f00");
         }
     };
     reader.readAsArrayBuffer(file);
