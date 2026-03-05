@@ -5,33 +5,36 @@ function updateStatus(msg, color = "#0f0") {
     statusEl.style.color = color;
 }
 
-window.onload = () => {
-    // Check if the Service Worker successfully unlocked the browser
-    if (!window.crossOriginIsolated) {
-        updateStatus("Security Restricted. Please refresh the page once.", "#ff9800");
-    } else if (typeof V86Starter !== "undefined") {
-        updateStatus("Ready. Select Android ISO.", "#0f0");
+// LIVE WATCHER: Keep checking until V86Starter exists
+const checkEngine = setInterval(() => {
+    if (typeof V86Starter !== "undefined") {
+        clearInterval(checkEngine);
+        if (window.crossOriginIsolated) {
+            updateStatus("READY. SELECT ANDROID ISO.", "#0f0");
+        } else {
+            updateStatus("SECURITY ACTIVE. PLEASE REFRESH ONCE.", "#ff9800");
+        }
     } else {
-        updateStatus("V86 Engine not found in memory.", "#f00");
+        updateStatus("SEARCHING FOR V86 ENGINE...", "#ff9800");
     }
-};
+}, 500);
 
 document.getElementById('iso_input').onchange = function(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!window.crossOriginIsolated) {
-        alert("The browser is still blocking the engine. Please refresh the page manually.");
+    if (typeof V86Starter === "undefined") {
+        alert("Wait! The engine hasn't loaded yet. Check your internet connection.");
         return;
     }
 
-    updateStatus("Reading ISO...");
+    updateStatus("Reading ISO: " + file.name);
     const reader = new FileReader();
     reader.onload = function(event) {
         try {
             const emulator = new V86Starter({
                 wasm_path: "./v86.wasm",
-                memory_size: 512 * 1024 * 1024, // 512MB for stability
+                memory_size: 512 * 1024 * 1024,
                 vga_memory_size: 16 * 1024 * 1024,
                 screen_container: document.getElementById("screen_container"),
                 bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
@@ -39,9 +42,9 @@ document.getElementById('iso_input').onchange = function(e) {
                 autostart: true,
             });
 
-            emulator.add_listener("emulator-started", () => updateStatus("Android Running"));
+            emulator.add_listener("emulator-started", () => updateStatus("ANDROID BOOTING..."));
         } catch (err) {
-            updateStatus("Error: " + err.message, "#f00");
+            updateStatus("BOOT ERROR: " + err.message, "#f00");
         }
     };
     reader.readAsArrayBuffer(file);
