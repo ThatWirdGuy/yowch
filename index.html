@@ -2,36 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Android x86 | Vercel VM</title>
+    <script src="libv86.js"></script>
     <style>
         body { background: #121212; color: #e0e0e0; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        #screen_container { width: 800px; height: 600px; background: #000; border: 2px solid #3498db; position: relative; }
-        #screen_container canvas { display: block; width: 100%; height: 100%; }
+        #screen_container { width: 800px; height: 600px; background: #000; border: 2px solid #3498db; }
         #loader { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:100; flex-direction:column; align-items:center; justify-content:center; }
         .spinner { border: 4px solid #333; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .controls { margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 8px; border: 1px solid #333; text-align: center; }
-        #status { color: #00ff00; font-family: monospace; margin-top: 10px; }
+        .controls { margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 8px; text-align: center; }
     </style>
 </head>
 <body>
-
-    <div id="loader">
-        <div class="spinner"></div>
-        <p id="loader_text" style="margin-top:20px; letter-spacing: 2px;">INITIALIZING...</p>
-    </div>
-
+    <div id="loader"><div class="spinner"></div><p style="margin-top:20px;">BOOTING SYSTEM...</p></div>
     <div id="screen_container"><canvas></canvas></div>
-
     <div class="controls">
         <input type="file" id="iso_input" accept=".iso">
-        <div id="status">Vercel Status: Ready. Select Android ISO.</div>
+        <div id="status">Vercel Status: Ready.</div>
     </div>
-
-    <script src="./libv86.js"></script>
-    <script src="./content_reporter.js"></script>
-    <script src="./launcher.js"></script>
-
+    <script src="content_reporter.js"></script>
+    <script src="launcher.js"></script>
 </body>
 </html>
