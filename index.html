@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yowch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="phone-container">
+    <div id="screen">
+        <div id="drop-area">
+            <p>Drag APK Here</p>
+            <input type="file" id="fileElem" accept=".apk" onchange="handleFiles(this.files)">
+        </div>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+</div>
+
+<script src="launcher.js"></script>
+</body>
+</html>
