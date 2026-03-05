@@ -5,43 +5,38 @@ function updateStatus(msg, color = "#0f0") {
     statusEl.style.color = color;
 }
 
-// The "Watcher" loop: Checks every 500ms for the engine
-function waitForV86() {
+// Check every 500ms
+const checkInit = setInterval(() => {
     if (typeof V86Starter !== "undefined") {
+        clearInterval(checkInit);
         if (window.crossOriginIsolated) {
-            updateStatus("Ready. Select Android ISO.", "#0f0");
+            updateStatus("Ready. Select ISO.", "#0f0");
         } else {
-            updateStatus("Security Locked. Please refresh the page.", "#ff9800");
+            updateStatus("Security Locked. Refresh the page once.", "#ff9800");
         }
     } else {
-        updateStatus("Loading libv86.js into memory...", "#ff9800");
-        setTimeout(waitForV86, 500);
+        // This tells us if the file is even reaching the browser
+        const scripts = Array.from(document.scripts).map(s => s.src);
+        console.log("Loaded scripts:", scripts);
+        updateStatus("Searching for V86Starter in memory...", "#ff9800");
     }
-}
-
-waitForV86();
+}, 500);
 
 document.getElementById('iso_input').onchange = function(e) {
     const file = e.target.files[0];
     if (!file || typeof V86Starter === "undefined") return;
 
-    updateStatus("Reading ISO: " + file.name);
     const reader = new FileReader();
     reader.onload = function(event) {
-        try {
-            const emulator = new V86Starter({
-                wasm_path: "./v86.wasm",
-                memory_size: 512 * 1024 * 1024,
-                vga_memory_size: 16 * 1024 * 1024,
-                screen_container: document.getElementById("screen_container"),
-                bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
-                cdrom: { buffer: event.target.result },
-                autostart: true,
-            });
-            emulator.add_listener("emulator-started", () => updateStatus("Running"));
-        } catch (err) {
-            updateStatus("Error: " + err.message, "#f00");
-        }
+        new V86Starter({
+            wasm_path: "./v86.wasm",
+            memory_size: 512 * 1024 * 1024,
+            vga_memory_size: 16 * 1024 * 1024,
+            screen_container: document.getElementById("screen_container"),
+            bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
+            cdrom: { buffer: event.target.result },
+            autostart: true,
+        });
     };
     reader.readAsArrayBuffer(file);
 };
