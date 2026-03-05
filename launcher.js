@@ -1,18 +1,18 @@
 const statusEl = document.getElementById('status');
 
 function updateStatus(msg, color = "#0f0") {
-    statusEl.innerText = msg.toUpperCase();
+    statusEl.innerText = "STATUS: " + msg.toUpperCase();
     statusEl.style.color = color;
 }
 
-// Security Check
 window.onload = () => {
+    // Check if the Service Worker successfully unlocked the browser
     if (!window.crossOriginIsolated) {
-        updateStatus("Security: Restricted. Refreshing to unlock...", "#ff9800");
+        updateStatus("Security Locked. Please refresh the page once.", "#ff9800");
     } else if (typeof V86Starter !== "undefined") {
-        updateStatus("Ready. Select ISO.", "#0f0");
+        updateStatus("Ready. Select Android ISO.", "#0f0");
     } else {
-        updateStatus("Engine missing in folder.", "#f00");
+        updateStatus("V86 Engine not found in memory.", "#f00");
     }
 };
 
@@ -20,7 +20,7 @@ document.getElementById('iso_input').onchange = function(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    updateStatus("Reading " + file.name);
+    updateStatus("Reading ISO...");
     const reader = new FileReader();
     reader.onload = function(event) {
         try {
@@ -34,7 +34,7 @@ document.getElementById('iso_input').onchange = function(e) {
                 autostart: true,
             });
 
-            emulator.add_listener("emulator-started", () => updateStatus("Running"));
+            emulator.add_listener("emulator-started", () => updateStatus("Android Running"));
         } catch (err) {
             updateStatus("Error: " + err.message, "#f00");
         }
