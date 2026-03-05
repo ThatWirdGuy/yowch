@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Android VM</title>
-    <script src="coi-serviceworker.js"></script>
+    <title>Android VM | Force Refresh</title>
+    <script src="coi-serviceworker.js?v=99"></script>
     <style>
         body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
         #screen_container { width: 800px; height: 600px; border: 2px solid #333; }
-        #status { margin-top: 15px; color: #ff9800; }
+        #status { margin-top: 15px; color: #ff9800; background: #111; padding: 10px; border-radius: 4px; }
     </style>
 </head>
 <body>
     <div id="screen_container"><canvas></canvas></div>
     <div style="margin-top:20px;">
         <input type="file" id="iso_input">
-        <p id="status">STATUS: INITIALIZING...</p>
+        <p id="status">STATUS: PERFORMING NUCLEAR RESET...</p>
     </div>
 
-    <script src="./libv86.js"></script>
-    <script src="./launcher.js"></script>
+    <script src="./libv86.js?v=99"></script>
+    <script src="./launcher.js?v=99"></script>
 </body>
 </html>
