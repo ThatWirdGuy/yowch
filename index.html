@@ -1,24 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Free APK Launcher</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/v86/0.12.0/libv86.js"></script>
-    <style>
-        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        #drop-zone { width: 80%; height: 300px; border: 3px dashed #444; border-radius: 20px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; z-index: 100; }
-        #screen_container { display: none; width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; }
-        canvas { width: 100%; height: 100%; object-fit: contain; }
-    </style>
+    <title>Android x86 in Browser</title>
 </head>
 <body>
-
-    <div id="drop-zone">
-        <h2>DRAG YOUR APK HERE<br><span style="font-size: 14px; color: #888;">The game will launch inside the browser</span></h2>
-    </div>
-
     <div id="screen_container"></div>
 
-    <script src="launcher.js"></script>
+    <script src="https://copy.sh/v86/build/libv86.js"></script>
+
+    <script type="module" src="launcher.js"></script>
 </body>
 </html>
