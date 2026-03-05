@@ -2,23 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Android Emulator</title>
-    <script id="v86-lib" src="./libv86.js"></script>
+    <title>Android x86 | GitHub Pages</title>
+    <script src="coi-serviceworker.js"></script>
+    <script src="libv86.js"></script>
     <style>
-        body { background: #0a0a0a; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        #screen_container { width: 800px; height: 600px; background: #000; border: 2px solid #333; }
-        #loader { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:100; flex-direction:column; align-items:center; justify-content:center; }
-        .controls { margin-top: 20px; background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #333; }
-        #status { color: #ff3333; font-family: monospace; margin-top: 10px; }
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #screen_container { width: 800px; height: 600px; border: 2px solid #333; background: #000; }
+        .controls { margin-top: 20px; padding: 15px; background: #111; border: 1px solid #222; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <div id="loader"><p>STARTING EMULATOR...</p></div>
     <div id="screen_container"><canvas></canvas></div>
     <div class="controls">
         <input type="file" id="iso_input" accept=".iso">
-        <div id="status">STATUS: INITIALIZING...</div>
+        <p id="status">STATUS: INITIALIZING...</p>
     </div>
-    <script src="./launcher.js"></script>
+    <script src="launcher.js"></script>
 </body>
 </html>
