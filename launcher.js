@@ -6,13 +6,13 @@ function updateStatus(msg, color = "#0f0") {
 }
 
 window.onload = () => {
-    // Check if the Service Worker successfully unlocked SharedArrayBuffer
+    // Check if the Service Worker successfully unlocked the browser
     if (!window.crossOriginIsolated) {
-        updateStatus("Security Restricted. Refreshing to unlock engine...", "#ff9800");
+        updateStatus("Security Restricted. Please refresh the page once.", "#ff9800");
     } else if (typeof V86Starter !== "undefined") {
         updateStatus("Ready. Select Android ISO.", "#0f0");
     } else {
-        updateStatus("libv86.js not found in memory.", "#f00");
+        updateStatus("V86 Engine not found in memory.", "#f00");
     }
 };
 
@@ -21,7 +21,7 @@ document.getElementById('iso_input').onchange = function(e) {
     if (!file) return;
 
     if (!window.crossOriginIsolated) {
-        alert("The browser is still blocking the engine. Please refresh the page.");
+        alert("The browser is still blocking the engine. Please refresh the page manually.");
         return;
     }
 
