@@ -1,29 +1,35 @@
 const statusEl = document.getElementById('status');
 
-function updateStatus(msg, color = "#0f0") {
+function updateStatus(msg, color = "#ff9800") {
     statusEl.innerText = "STATUS: " + msg.toUpperCase();
     statusEl.style.color = color;
 }
 
-// Check if the engine loaded from the web
-window.onload = () => {
+// Watch for the engine to appear in browser memory
+const checkEngine = setInterval(() => {
     if (typeof V86Starter !== "undefined") {
-        updateStatus("Ready. Select Android ISO.", "#0f0");
+        clearInterval(checkEngine);
+        if (window.crossOriginIsolated) {
+            updateStatus("Ready. Select Android ISO.", "#0f0");
+        } else {
+            updateStatus("Security Locked. Click 'Force Unlock' button.", "#ff9800");
+        }
     } else {
-        updateStatus("CDN Load Failed. Check Internet.", "#f00");
+        updateStatus("Downloading Engine from Web...", "#ff9800");
     }
-};
+}, 1000);
 
 document.getElementById('iso_input').onchange = function(e) {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file || typeof V86Starter === "undefined") return;
 
-    updateStatus("Booting " + file.name + "...");
+    updateStatus("Reading ISO: " + file.name);
     const reader = new FileReader();
     reader.onload = function(event) {
         try {
             new V86Starter({
-                wasm_path: "https://copy.sh/v86/build/v86.wasm", // Load brain from CDN too
+                // Load the 'brain' from the web too
+                wasm_path: "https://copy.sh/v86/build/v86.wasm",
                 memory_size: 512 * 1024 * 1024,
                 vga_memory_size: 16 * 1024 * 1024,
                 screen_container: document.getElementById("screen_container"),
@@ -31,8 +37,9 @@ document.getElementById('iso_input').onchange = function(e) {
                 cdrom: { buffer: event.target.result },
                 autostart: true,
             });
+            updateStatus("Android Running", "#0f0");
         } catch (err) {
-            updateStatus("Error: " + err.message, "#f00");
+            updateStatus("Boot Error: " + err.message, "#f00");
         }
     };
     reader.readAsArrayBuffer(file);
