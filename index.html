@@ -1,21 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Yowch</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Private APK Launcher</title>
+    <script src="https://copy.sh/v86/build/libv86.js"></script>
+    <style>
+        body { margin: 0; background: #000; color: #0f0; font-family: monospace; overflow: hidden; }
+        #boot-layer { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: #000; }
+        #screen_container { width: 100vw; height: 100vh; }
+        canvas { width: 100%; height: 100%; object-fit: contain; }
+        .drop-box { border: 2px dashed #333; padding: 40px; border-radius: 15px; cursor: pointer; }
+    </style>
 </head>
 <body>
 
-<div class="phone-container">
-    <div id="screen">
-        <div id="drop-area">
-            <p>Drag APK Here</p>
-            <input type="file" id="fileElem" accept=".apk" onchange="handleFiles(this.files)">
+    <div id="boot-layer">
+        <div class="drop-box" id="drop-zone">
+            <h2>GAME LAUNCHER</h2>
+            <p>Drag & Drop your .apk here to begin</p>
         </div>
-        <canvas id="canvas" style="display:none;"></canvas>
+        <p id="status"></p>
     </div>
-</div>
 
-<script src="launcher.js"></script>
+    <div id="screen_container"><canvas></canvas></div>
+
+    <script>
+        const status = document.getElementById("status");
+        
+        function startAndroid(apkBuffer) {
+            document.getElementById("boot-layer").style.background = "rgba(0,0,0,0.8)";
+            status.innerText = "Booting Android Kernel... Please wait.";
+
+            var emulator = new V86Starter({
+                wasm_path: "https://copy.sh/v86/build/v86.wasm",
+                memory_size: 512 * 1024 * 1024, // 512MB RAM
+                vga_assets: "https://copy.sh/v86/bios/vgabios.bin",
+                bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
+                // PASTE YOUR DIRECT LINK TO THE 4.4 ISO BELOW
+                cdrom: { url: "YOUR_DIRECT_ISO_LINK_HERE" }, 
+                autostart: true,
+                screen_container: document.getElementById("screen_container"),
+            });
+
+            emulator.add_listener("emulator-ready", function() {
+                // Upload APK to the VM's internal temporary storage
+                emulator.create_file("/game.apk", new Uint8Array(apkBuffer));
+                status.innerText = "System Ready. Install game.apk via terminal.";
+                
+                // Optional: Automatically hide the UI after 20 seconds
+                setTimeout(() => { document.getElementById("boot-layer").style.display = 'none'; }, 20000);
+            });
+        }
+
+        // Drag and Drop Logic
+        const dz = document.getElementById("drop-zone");
+        dz.ondragover = e => e.preventDefault();
+        dz.ondrop = e => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            const reader = new FileReader();
+            reader.onload = (ev) => startAndroid(ev.target.result);
+            reader.readAsArrayBuffer(file);
+        };
+    </script>
 </body>
 </html>
