@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Android x86 in Browser</title>
+    <meta charset="UTF-8">
+    <title>APK Web Launcher</title>
+    <script src="https://copy.sh/v86/build/libv86.js"></script>
+    <style>
+        body { margin: 0; background: #111; color: #0f0; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        #drop-zone { width: 300px; height: 200px; border: 2px dashed #0f0; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; cursor: pointer; }
+        #screen_container { display: none; width: 100vw; height: 100vh; position: absolute; }
+        canvas { width: 100%; height: 100%; object-fit: contain; }
+    </style>
 </head>
 <body>
+
+    <div id="drop-zone">
+        <p>DROP APK FILE HERE<br>to boot Android</p>
+    </div>
+
     <div id="screen_container"></div>
 
-    <script src="https://copy.sh/v86/build/libv86.js"></script>
-
-    <script type="module" src="launcher.js"></script>
+    <script src="launcher.js"></script>
 </body>
 </html>
