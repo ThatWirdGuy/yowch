@@ -1,3 +1,7 @@
+/**
+ * launcher.js - Final Stable Version
+ */
+
 function updateLoader(text, show = true) {
     const loader = document.getElementById('loader');
     const loaderText = document.getElementById('loader_text');
@@ -7,13 +11,22 @@ function updateLoader(text, show = true) {
 
 document.addEventListener("DOMContentLoaded", function() {
     const isoInput = document.getElementById('iso_input');
+
     if (isoInput) {
         isoInput.onchange = function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            updateLoader("Reading ISO...", true);
+
+            updateLoader("Reading ISO File...", true);
+
             const reader = new FileReader();
             reader.onload = function(event) {
+                // Check if the library is ready
+                if (typeof V86Starter === "undefined") {
+                    updateLoader("", false);
+                    alert("FATAL: The v86 engine is blocked. Try turning off Opera VPN or using a local server.");
+                    return;
+                }
                 startAndroid(event.target.result);
             };
             reader.readAsArrayBuffer(file);
@@ -22,15 +35,11 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function startAndroid(isoBuffer) {
-    if (typeof V86Starter === "undefined") {
-        updateLoader("", false);
-        alert("FATAL: libv86.js is still not loading. Ensure the file is in your folder!");
-        return;
-    }
+    updateLoader("Booting Android...", true);
 
     const emulator = new V86Starter({
-        // POINTING TO LOCAL WASM NOW
-        wasm_path: "v86.wasm",
+        // Link to the online brain
+        wasm_path: "https://unpkg.com/v86@latest/build/v86.wasm",
         memory_size: 1024 * 1024 * 1024,
         vga_memory_size: 16 * 1024 * 1024,
         screen_container: document.getElementById("screen_container"),
@@ -41,5 +50,6 @@ function startAndroid(isoBuffer) {
 
     emulator.add_listener("emulator-started", function() {
         updateLoader("", false);
+        if (typeof reportStatus === "function") reportStatus("Android System Started");
     });
 }
