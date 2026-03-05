@@ -1,42 +1,42 @@
 const statusEl = document.getElementById('status');
 const loaderEl = document.getElementById('loader');
 
-function updateStatus(msg, loading = false) {
-    if (statusEl) statusEl.innerText = msg.toUpperCase();
+function updateStatus(msg, loading = false, color = "#4caf50") {
+    if (statusEl) {
+        statusEl.innerText = msg.toUpperCase();
+        statusEl.style.color = color;
+    }
     if (loaderEl) loaderEl.style.display = loading ? 'flex' : 'none';
 }
+
+// Check on page load
+window.addEventListener('load', () => {
+    if (typeof V86Starter !== "undefined") {
+        updateStatus("READY", false, "#4caf50");
+    } else {
+        updateStatus("ENGINE NOT LOADED - ATTEMPTING RECOVERY", false, "#ff9800");
+    }
+});
 
 document.getElementById('iso_input').onchange = function(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    updateStatus("Reading ISO...", true);
+    if (typeof V86Starter === "undefined") {
+        updateStatus("FATAL: ENGINE BLOCKED BY BROWSER", false, "#ff3333");
+        return;
+    }
 
+    updateStatus("Reading ISO...", true);
     const reader = new FileReader();
     reader.onload = function(event) {
-        let retries = 0;
-        const maxRetries = 20; // 2 seconds total
-
-        const waitForEngine = setInterval(() => {
-            if (typeof V86Starter !== "undefined") {
-                clearInterval(waitForEngine);
-                bootVM(event.target.result);
-            } else {
-                retries++;
-                updateStatus(`Initializing Engine (Attempt ${retries})...`, true);
-                if (retries >= maxRetries) {
-                    clearInterval(waitForEngine);
-                    updateStatus("FATAL: Engine initialization timed out!", false);
-                }
-            }
-        }, 100);
+        bootVM(event.target.result);
     };
     reader.readAsArrayBuffer(file);
 };
 
 function bootVM(isoBuffer) {
     updateStatus("Booting Android...", true);
-    
     try {
         const emulator = new V86Starter({
             wasm_path: "./v86.wasm",
@@ -49,9 +49,9 @@ function bootVM(isoBuffer) {
         });
 
         emulator.add_listener("emulator-started", () => {
-            updateStatus("System Running", false);
+            updateStatus("System Running", false, "#4caf50");
         });
     } catch (err) {
-        updateStatus("Boot Error: " + err.message, false);
+        updateStatus("Boot Error: " + err.message, false, "#ff3333");
     }
 }
