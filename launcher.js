@@ -1,32 +1,33 @@
-// Ensure we handle the "Unexpected token export" by using a module-friendly approach
-import { someReporter } from './content_reporter.js'; 
+// 1. DELETE any 'import' lines at the top of this file
+
+document.addEventListener("DOMContentLoaded", function() {
+    // 2. Wrap your input logic here
+    const isoInput = document.getElementById('iso_input');
+
+    if (isoInput) {
+        isoInput.onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                // reportStatus is now global, so we can just call it
+                reportStatus("ISO Loaded. Starting emulator...");
+                startAndroid(event.target.result);
+            };
+            reader.readAsArrayBuffer(file);
+        };
+    }
+});
 
 function startAndroid(isoBuffer) {
-    // Check if the library loaded correctly
-    if (typeof V86Starter === "undefined") {
-        console.error("V86Starter is not defined. Check if libv86.js is loaded.");
-        return;
-    }
-
+    // Your V86Starter code goes here (make sure screen_container exists in HTML)
     const emulator = new V86Starter({
         wasm_path: "https://copy.sh/v86/build/v86.wasm",
-        memory_size: 512 * 1024 * 1024, // Android needs at least 512MB
-        vga_memory_size: 8 * 1024 * 1024,
+        memory_size: 512 * 1024 * 1024,
         screen_container: document.getElementById("screen_container"),
         bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
-        cdrom: { buffer: isoBuffer }, // Using the buffer from your file reader
+        cdrom: { buffer: isoBuffer },
         autostart: true,
     });
 }
-
-// Fixed listener for your file upload
-const reader = new FileReader();
-reader.onload = function(e) {
-    const buffer = e.target.result;
-    startAndroid(buffer);
-};
-
-// Assuming you have an <input type="file" id="iso_input">
-document.getElementById('iso_input').onchange = function(e) {
-    reader.readAsArrayBuffer(this.files[0]);
-};
